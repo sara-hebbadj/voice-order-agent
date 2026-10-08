@@ -1,0 +1,119 @@
+{
+  "label": "text-only, no speech: scripts typed into the agent (no STT/TTS)",
+  "run_id": "text_only_2026-10-08",
+  "date": "2026-10-08",
+  "mode": "text",
+  "stt_model": null,
+  "tts_model": null,
+  "calls": 30,
+  "all": {
+    "task_success": {
+      "k": 30,
+      "n": 30,
+      "pct": 100.0
+    },
+    "order_capture": {
+      "k": 28,
+      "n": 28,
+      "pct": 100.0
+    },
+    "handover_decision": {
+      "k": 30,
+      "n": 30,
+      "pct": 100.0
+    },
+    "handover_recall": {
+      "k": 8,
+      "n": 8,
+      "pct": 100.0
+    },
+    "false_handovers": 0,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 30,
+      "n": 30,
+      "pct": 100.0
+    }
+  },
+  "en": {
+    "task_success": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "order_capture": {
+      "k": 14,
+      "n": 14,
+      "pct": 100.0
+    },
+    "handover_decision": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "handover_recall": {
+      "k": 4,
+      "n": 4,
+      "pct": 100.0
+    },
+    "false_handovers": 0,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    }
+  },
+  "ar": {
+    "task_success": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "order_capture": {
+      "k": 14,
+      "n": 14,
+      "pct": 100.0
+    },
+    "handover_decision": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "handover_recall": {
+      "k": 4,
+      "n": 4,
+      "pct": 100.0
+    },
+    "false_handovers": 0,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    }
+  },
+  "latency_per_turn": {
+    "stt": {
+      "n": 0,
+      "avg_ms": null,
+      "p95_ms": null
+    },
+    "agent": {
+      "n": 116,
+      "avg_ms": 1.26,
+      "p95_ms": 5.5
+    },
+    "tts": {
+      "n": 0,
+      "avg_ms": null,
+      "p95_ms": null
+    },
+    "total": {
+      "n": 116,
+      "avg_ms": 1.26,
+      "p95_ms": 5.5
+    }
+  },
+  "cost_per_call_usd": null
+}

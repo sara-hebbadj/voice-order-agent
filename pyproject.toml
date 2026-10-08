@@ -1,0 +1,37 @@
+[project]
+name = "voice-order-agent"
+version = "0.1.0"
+description = "Arabic/English voice agent for order status: speech-to-text, a rule-based verification agent, text-to-speech, with measured latency."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Sara Hebbadj" }]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "openai>=3.0",
+    "python-dotenv>=1.0",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+app = ["gradio>=6.0", "uvicorn>=0.30"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/voice_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

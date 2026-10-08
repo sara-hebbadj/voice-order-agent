@@ -1,0 +1,30 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Generated audio (test calls, and any real recordings kept out of git by choice)
+evals/audio/
+*.wav
+*.mp3
+
+# Gradio cache
+.gradio/
+flagged/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

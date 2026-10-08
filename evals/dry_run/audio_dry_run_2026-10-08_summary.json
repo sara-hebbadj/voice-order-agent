@@ -1,0 +1,119 @@
+{
+  "label": "DRY RUN with a fake speech client: NOT real results",
+  "run_id": "audio_dry_run_2026-10-08",
+  "date": "2026-10-08",
+  "mode": "audio",
+  "stt_model": "fake-stt",
+  "tts_model": "fake-tts",
+  "calls": 30,
+  "all": {
+    "task_success": {
+      "k": 30,
+      "n": 30,
+      "pct": 100.0
+    },
+    "order_capture": {
+      "k": 28,
+      "n": 28,
+      "pct": 100.0
+    },
+    "handover_decision": {
+      "k": 30,
+      "n": 30,
+      "pct": 100.0
+    },
+    "handover_recall": {
+      "k": 8,
+      "n": 8,
+      "pct": 100.0
+    },
+    "false_handovers": 0,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 30,
+      "n": 30,
+      "pct": 100.0
+    }
+  },
+  "en": {
+    "task_success": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "order_capture": {
+      "k": 14,
+      "n": 14,
+      "pct": 100.0
+    },
+    "handover_decision": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "handover_recall": {
+      "k": 4,
+      "n": 4,
+      "pct": 100.0
+    },
+    "false_handovers": 0,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    }
+  },
+  "ar": {
+    "task_success": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "order_capture": {
+      "k": 14,
+      "n": 14,
+      "pct": 100.0
+    },
+    "handover_decision": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "handover_recall": {
+      "k": 4,
+      "n": 4,
+      "pct": 100.0
+    },
+    "false_handovers": 0,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    }
+  },
+  "latency_per_turn": {
+    "stt": {
+      "n": 116,
+      "avg_ms": 0.0,
+      "p95_ms": 0.0
+    },
+    "agent": {
+      "n": 116,
+      "avg_ms": 1.24,
+      "p95_ms": 5.22
+    },
+    "tts": {
+      "n": 116,
+      "avg_ms": 0.0,
+      "p95_ms": 0.0
+    },
+    "total": {
+      "n": 116,
+      "avg_ms": 1.25,
+      "p95_ms": 5.22
+    }
+  },
+  "cost_per_call_usd": null
+}
