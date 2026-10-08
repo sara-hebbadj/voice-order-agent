@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-08",
+  "caller_tts_models": {
+    "google/gemini-3.8-flash-lite-tts": 129,
+    "x-ai/grok-voice-tts-1.0": 1
+  },
+  "tts_requests": 130,
+  "first_pass_files": 116,
+  "re_made_requests": 14,
+  "requests_with_cost": 130,
+  "cost_usd": 0.0540505,
+  "cost_source": "OpenRouter GET /api/v1/generation total_cost for every generation_id in synthesis_traces_2026-10-08.jsonl",
+  "audio_check": "Every clip whose script contains digits (72) was transcribed by openai/whisper-large-v3, openai/gpt-transcribe and openai/gpt-4o-transcribe (evals.crosscheck_stt --all-with-digits). Flags were reviewed by hand: readings in pairs or as quantities were kept as valid; clips that said a different number or sentence were re-made and checked again.",
+  "re_made_clips": {
+    "en07/turn_1": "said 'one zero zero four' (all 4 STT models); 2 re-makes",
+    "ar09/turn_1": "said 100200 (all 4); 1 re-make",
+    "ar13/turn_1": "said 1013 (all 4); 1 re-make",
+    "ar15/turn_1": "said 1008 (all 4); 1 re-make",
+    "ar03/turn_3": "'نعم' heard as 'Hey' / 'هاي' (all 4); 1 re-make",
+    "en08/turn_3": "said 'Alright, that's the order number.' instead of 0067 (3 of 3 checkers); 3 re-makes",
+    "en08/turn_4": "heard as 100066 / 10066 / 1006 (3 checkers disagree with 10006); 1 re-make",
+    "ar09/turn_4": "said 1020 (all 4); 3 Gemini re-makes still wrong (10220, 20100, 120), then made with x-ai/grok-voice-tts-1.0 voice 'ara' ('عشرة آلاف وعشرون')"
+  }
+}

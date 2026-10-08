@@ -28,3 +28,7 @@ flagged/
 Thumbs.db
 .vscode/
 .idea/
+
+# A few small sample clips are kept on purpose (see evals/audio_samples/README.md)
+!evals/audio_samples/*.wav
+!evals/audio_samples/*.mp3

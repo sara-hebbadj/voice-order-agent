@@ -33,6 +33,24 @@
       "k": 30,
       "n": 30,
       "pct": 100.0
+    },
+    "stt": {
+      "turns": 116,
+      "wer": {
+        "edits": 0,
+        "ref_words": 527,
+        "pct": 0.0
+      },
+      "number_capture": {
+        "k": 72,
+        "n": 72,
+        "pct": 100.0
+      },
+      "order_id_capture": {
+        "k": 36,
+        "n": 36,
+        "pct": 100.0
+      }
     }
   },
   "en": {
@@ -62,6 +80,47 @@
       "k": 15,
       "n": 15,
       "pct": 100.0
+    },
+    "latency_per_turn": {
+      "stt": {
+        "n": 58,
+        "avg_ms": 0.0,
+        "p95_ms": 0.0
+      },
+      "agent": {
+        "n": 58,
+        "avg_ms": 1.54,
+        "p95_ms": 5.9
+      },
+      "tts": {
+        "n": 58,
+        "avg_ms": 0.0,
+        "p95_ms": 0.0
+      },
+      "total": {
+        "n": 58,
+        "avg_ms": 1.55,
+        "p95_ms": 5.9
+      }
+    },
+    "cost_per_call_usd": null,
+    "stt": {
+      "turns": 58,
+      "wer": {
+        "edits": 0,
+        "ref_words": 275,
+        "pct": 0.0
+      },
+      "number_capture": {
+        "k": 36,
+        "n": 36,
+        "pct": 100.0
+      },
+      "order_id_capture": {
+        "k": 18,
+        "n": 18,
+        "pct": 100.0
+      }
     }
   },
   "ar": {
@@ -91,6 +150,47 @@
       "k": 15,
       "n": 15,
       "pct": 100.0
+    },
+    "latency_per_turn": {
+      "stt": {
+        "n": 58,
+        "avg_ms": 0.0,
+        "p95_ms": 0.0
+      },
+      "agent": {
+        "n": 58,
+        "avg_ms": 1.26,
+        "p95_ms": 6.31
+      },
+      "tts": {
+        "n": 58,
+        "avg_ms": 0.0,
+        "p95_ms": 0.0
+      },
+      "total": {
+        "n": 58,
+        "avg_ms": 1.26,
+        "p95_ms": 6.31
+      }
+    },
+    "cost_per_call_usd": null,
+    "stt": {
+      "turns": 58,
+      "wer": {
+        "edits": 0,
+        "ref_words": 252,
+        "pct": 0.0
+      },
+      "number_capture": {
+        "k": 36,
+        "n": 36,
+        "pct": 100.0
+      },
+      "order_id_capture": {
+        "k": 18,
+        "n": 18,
+        "pct": 100.0
+      }
     }
   },
   "latency_per_turn": {
@@ -101,8 +201,8 @@
     },
     "agent": {
       "n": 116,
-      "avg_ms": 1.24,
-      "p95_ms": 5.22
+      "avg_ms": 1.4,
+      "p95_ms": 6.33
     },
     "tts": {
       "n": 116,
@@ -111,8 +211,8 @@
     },
     "total": {
       "n": 116,
-      "avg_ms": 1.25,
-      "p95_ms": 5.22
+      "avg_ms": 1.41,
+      "p95_ms": 6.33
     }
   },
   "cost_per_call_usd": null

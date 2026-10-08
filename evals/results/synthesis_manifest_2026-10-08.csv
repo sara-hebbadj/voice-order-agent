@@ -1,0 +1,117 @@
+call_id,turn,language,voice,tags,chars,source,file,text
+en01,1,en,Kore,,32,tts,en01/turn_1.wav,"Hi, my order number is LS-10154."
+en01,2,en,Kore,,4,tts,en01/turn_2.wav,Yes.
+en01,3,en,Kore,,4,tts,en01/turn_3.wav,8260
+en02,1,en,Puck,,24,tts,en02/turn_1.wav,one double zero zero one
+en02,2,en,Puck,,18,tts,en02/turn_2.wav,"Yes, that's right."
+en02,3,en,Puck,,15,tts,en02/turn_3.wav,two six one two
+en03,1,en,Aoede,,18,tts,en03/turn_1.wav,My order is 10128.
+en03,2,en,Aoede,,23,tts,en03/turn_2.wav,"No, the order is 10182."
+en03,3,en,Aoede,,4,tts,en03/turn_3.wav,Yes.
+en03,4,en,Aoede,,4,tts,en03/turn_4.wav,9786
+en04,1,en,Charon,,47,tts,en04/turn_1.wav,"Hello, I'm calling to check where my parcel is."
+en04,2,en,Charon,,11,tts,en04/turn_2.wav,It's 10155.
+en04,3,en,Charon,,5,tts,en04/turn_3.wav,Yeah.
+en04,4,en,Charon,,23,tts,en04/turn_4.wav,The last four are 8886.
+en05,1,en,Leda,,20,tts,en05/turn_1.wav,"Order 10002, please."
+en05,2,en,Leda,,8,tts,en05/turn_2.wav,Correct.
+en05,3,en,Leda,,30,tts,en05/turn_3.wav,My number is +971 50 000 8350.
+en06,1,en,Fenrir,,35,tts,en06/turn_1.wav,"I want to speak to a human, please."
+en07,1,en,Kore,,5,tts,en07/turn_1.wav,10004
+en07,2,en,Kore,,4,tts,en07/turn_2.wav,Yes.
+en07,3,en,Kore,,38,tts,en07/turn_3.wav,"Actually, can I talk to a real person?"
+en08,1,en,Puck,,5,tts,en08/turn_1.wav,10006
+en08,2,en,Puck,,4,tts,en08/turn_2.wav,Yes.
+en08,3,en,Puck,,4,tts,en08/turn_3.wav,0067
+en08,4,en,Puck,,11,tts,en08/turn_4.wav,It's 10006.
+en08,5,en,Puck,,4,tts,en08/turn_5.wav,Yes.
+en08,6,en,Puck,,4,tts,en08/turn_6.wav,1178
+en09,1,en,Aoede,,5,tts,en09/turn_1.wav,10007
+en09,2,en,Aoede,,4,tts,en09/turn_2.wav,Yes.
+en09,3,en,Aoede,,4,tts,en09/turn_3.wav,2146
+en09,4,en,Aoede,,13,tts,en09/turn_4.wav,Sorry. 10007.
+en09,5,en,Aoede,,4,tts,en09/turn_5.wav,Yes.
+en09,6,en,Aoede,,4,tts,en09/turn_6.wav,1035
+en10,1,en,Charon,,8,tts,en10/turn_1.wav,LS-10999
+en10,2,en,Charon,,4,tts,en10/turn_2.wav,Yes.
+en10,3,en,Charon,,4,tts,en10/turn_3.wav,4821
+en10,4,en,Charon,,13,tts,en10/turn_4.wav,I said 10999.
+en10,5,en,Charon,,4,tts,en10/turn_5.wav,Yes.
+en10,6,en,Charon,,4,tts,en10/turn_6.wav,4821
+en11,1,en,Leda,,39,tts,en11/turn_1.wav,My order is ten thousand and sixty two.
+en11,2,en,Leda,,21,tts,en11/turn_2.wav,one zero zero six two
+en11,3,en,Leda,,4,tts,en11/turn_3.wav,Yes.
+en11,4,en,Leda,,4,tts,en11/turn_4.wav,6804
+en12,1,en,Fenrir,fast noisy,26,tts,en12/turn_1.wav,Where's my order LS 10157?
+en12,2,en,Fenrir,fast noisy,7,tts,en12/turn_2.wav,yes yes
+en12,3,en,Fenrir,fast noisy,4,tts,en12/turn_3.wav,7735
+en13,1,en,Kore,,19,tts,en13/turn_1.wav,Order number 10009.
+en13,2,en,Kore,,13,tts,en13/turn_2.wav,That's right.
+en13,3,en,Kore,,4,tts,en13/turn_3.wav,1241
+en13,4,en,Kore,,26,tts,en13/turn_4.wav,"No, that's all. Thank you!"
+en14,1,en,Puck,,17,tts,en14/turn_1.wav,My order is 1018.
+en14,2,en,Puck,,31,tts,en14/turn_2.wav,"Sorry, one zero one eight five."
+en14,3,en,Puck,,4,tts,en14/turn_3.wav,Yes.
+en14,4,en,Puck,,4,tts,en14/turn_4.wav,5563
+en15,1,en,Aoede,,5,tts,en15/turn_1.wav,10003
+en15,2,en,Aoede,,27,tts,en15/turn_2.wav,"Sorry, can you repeat that?"
+en15,3,en,Aoede,,4,tts,en15/turn_3.wav,Yes.
+en15,4,en,Aoede,,4,tts,en15/turn_4.wav,7912
+ar01,1,ar,Charon,,21,tts,ar01/turn_1.wav,مرحبا، رقم طلبي ١٠١٥٨
+ar01,2,ar,Charon,,3,tts,ar01/turn_2.wav,نعم
+ar01,3,ar,Charon,,4,tts,ar01/turn_3.wav,٨٣٥٠
+ar02,1,ar,Leda,,23,tts,ar02/turn_1.wav,واحد صفر صفر واحد وواحد
+ar02,2,ar,Leda,,7,tts,ar02/turn_2.wav,أيوه صح
+ar02,3,ar,Leda,,21,tts,ar02/turn_3.wav,ثمانية ثلاثة خمسة صفر
+ar03,1,ar,Fenrir,,15,tts,ar03/turn_1.wav,رقم الطلب 10168
+ar03,2,ar,Fenrir,,15,tts,ar03/turn_2.wav,لا، الرقم 10186
+ar03,3,ar,Fenrir,,3,tts,ar03/turn_3.wav,نعم
+ar03,4,ar,Fenrir,,4,tts,ar03/turn_4.wav,8956
+ar04,1,ar,Kore,,23,tts,ar04/turn_1.wav,السلام عليكم، وين طلبي؟
+ar04,2,ar,Kore,,11,tts,ar04/turn_2.wav,الرقم 10160
+ar04,3,ar,Kore,,3,tts,ar04/turn_3.wav,إيه
+ar04,4,ar,Kore,,20,tts,ar04/turn_4.wav,آخر أربعة أرقام 5345
+ar05,1,ar,Puck,,13,tts,ar05/turn_1.wav,طلب رقم 10005
+ar05,2,ar,Puck,,4,tts,ar05/turn_2.wav,صحيح
+ar05,3,ar,Puck,,17,tts,ar05/turn_3.wav,رقمي ٠٥٠ ٠٠٠ ٧٩١٢
+ar06,1,ar,Aoede,,21,tts,ar06/turn_1.wav,أبي أكلم موظف لو سمحت
+ar07,1,ar,Charon,,15,tts,ar07/turn_1.wav,رقم الطلب 10012
+ar07,2,ar,Charon,,3,tts,ar07/turn_2.wav,نعم
+ar07,3,ar,Charon,,34,tts,ar07/turn_3.wav,ممكن أتكلم مع شخص من خدمة العملاء؟
+ar08,1,ar,Leda,,14,tts,ar08/turn_1.wav,طلبي رقم 10018
+ar08,2,ar,Leda,,3,tts,ar08/turn_2.wav,نعم
+ar08,3,ar,Leda,,4,tts,ar08/turn_3.wav,7915
+ar08,4,ar,Leda,,11,tts,ar08/turn_4.wav,الرقم 10018
+ar08,5,ar,Leda,,3,tts,ar08/turn_5.wav,نعم
+ar08,6,ar,Leda,,4,tts,ar08/turn_6.wav,9026
+ar09,1,ar,Fenrir,,14,tts,ar09/turn_1.wav,طلبي رقم 10020
+ar09,2,ar,Fenrir,,3,tts,ar09/turn_2.wav,نعم
+ar09,3,ar,Fenrir,,4,tts,ar09/turn_3.wav,3069
+ar09,4,ar,Fenrir,,10,tts,ar09/turn_4.wav,آسف، 10020
+ar09,5,ar,Fenrir,,3,tts,ar09/turn_5.wav,نعم
+ar09,6,ar,Fenrir,,4,tts,ar09/turn_6.wav,1958
+ar10,1,ar,Kore,,15,tts,ar10/turn_1.wav,رقم الطلب 10999
+ar10,2,ar,Kore,,3,tts,ar10/turn_2.wav,نعم
+ar10,3,ar,Kore,,4,tts,ar10/turn_3.wav,4821
+ar10,4,ar,Kore,,12,tts,ar10/turn_4.wav,قلت لك 10999
+ar10,5,ar,Kore,,3,tts,ar10/turn_5.wav,نعم
+ar10,6,ar,Kore,,4,tts,ar10/turn_6.wav,4821
+ar11,1,ar,Puck,,33,tts,ar11/turn_1.wav,رقم الطلب عشرة آلاف وخمسة وأربعين
+ar11,2,ar,Puck,,23,tts,ar11/turn_2.wav,واحد صفر صفر أربعة خمسة
+ar11,3,ar,Puck,,7,tts,ar11/turn_3.wav,أيوه صح
+ar11,4,ar,Puck,,20,tts,ar11/turn_4.wav,آخر أربعة أرقام 4139
+ar12,1,ar,Aoede,fast noisy,23,tts,ar12/turn_1.wav,وين الطلب 10161 لو سمحت
+ar12,2,ar,Aoede,fast noisy,7,tts,ar12/turn_2.wav,إيه إيه
+ar12,3,ar,Aoede,fast noisy,4,tts,ar12/turn_3.wav,7930
+ar13,1,ar,Charon,,15,tts,ar13/turn_1.wav,رقم الطلب ١٠٠١٣
+ar13,2,ar,Charon,,2,tts,ar13/turn_2.wav,صح
+ar13,3,ar,Charon,,4,tts,ar13/turn_3.wav,5673
+ar13,4,ar,Charon,,20,tts,ar13/turn_4.wav,لا شكراً، مع السلامة
+ar14,1,ar,Leda,,13,tts,ar14/turn_1.wav,رقم طلبي 1018
+ar14,2,ar,Leda,,30,tts,ar14/turn_2.wav,آسف، واحد صفر واحد ثمانية تسعة
+ar14,3,ar,Leda,,3,tts,ar14/turn_3.wav,نعم
+ar14,4,ar,Leda,,4,tts,ar14/turn_4.wav,2790
+ar15,1,ar,Fenrir,,14,tts,ar15/turn_1.wav,طلبي رقم 10008
+ar15,2,ar,Fenrir,,10,tts,ar15/turn_2.wav,ممكن تعيد؟
+ar15,3,ar,Fenrir,,3,tts,ar15/turn_3.wav,نعم
+ar15,4,ar,Fenrir,,4,tts,ar15/turn_4.wav,1887

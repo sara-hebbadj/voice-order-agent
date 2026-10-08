@@ -1,0 +1,4 @@
+call_id,language,category,expected_outcome,expected_status,expected_order_id,expected_handover_reason,final_stage,handover_reason,confirmed_order,reported_status,failures_at_end,turns_used,cost_usd,task_success,capture_ok,handover_ok,status_leak,language_ok
+en01,en,happy_path,status,shipped,LS-10154,,handover,repeated_failure,,,2,3,0.00452,False,False,False,False,True
+ar01,ar,happy_path,status,shipped,LS-10158,,handover,repeated_failure,,,2,3,0.004168,False,False,False,False,True
+ar02,ar,digits_as_words,status,delivered,LS-10011,,ask_phone,,10011,,1,3,0.004445,False,True,True,False,True

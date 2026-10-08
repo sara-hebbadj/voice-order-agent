@@ -69,3 +69,22 @@ def test_pcm_to_wav_and_noise():
     assert 9 < snr < 11
     with wave.open(BytesIO(synthesize_audio.pcm_to_wav(tone))) as wav:
         assert wav.getframerate() == 24_000 and wav.getnframes() == 24_000
+
+
+def test_word_edits_counts_substitutions_insertions_deletions():
+    from evals.scoring import word_edits
+
+    assert word_edits(["a", "b", "c"], ["a", "b", "c"]) == 0
+    assert word_edits(["a", "b", "c"], ["a", "x", "c"]) == 1
+    assert word_edits(["a", "b"], ["a", "b", "c"]) == 1
+    assert word_edits(["a", "b", "c"], []) == 3
+
+
+def test_score_turn_treats_digits_and_digit_words_alike():
+    from evals.scoring import score_turn
+
+    same = score_turn("My order is 10128.", "My order is one zero one two eight.")
+    assert same == {"ref_words": 8, "word_edits": 0, "numbers_ok": True, "order_id_ok": True}
+    dropped = score_turn("10004", "1004.")  # a real STT error from the first live run
+    assert dropped["numbers_ok"] is False and dropped["order_id_ok"] is False
+    assert score_turn("Yes.", "Yes?")["numbers_ok"] is None  # no number in the script

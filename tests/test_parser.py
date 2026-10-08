@@ -87,3 +87,54 @@ def test_intents(text, intent):
 
 def test_arabic_greeting_is_not_goodbye():
     assert "goodbye" not in parse("السلام عليكم").intents
+
+
+# Transcripts returned by openai/gpt-4o-transcribe in the first live audio run
+# (evals/results/audio_openai_gpt-4o-transcribe_2026-10-08_before-fixes_turns.jsonl).
+@pytest.mark.parametrize(
+    "transcript, order, last4",
+    [
+        ("Hi, my order number is LS10154.", "10154", None),  # STT dropped the hyphen
+        ("ثمانية، ثلاثة، خمسة، صفر.", None, "8350"),  # STT added Arabic commas
+        ("آخر أربع أرقام خمسة ثلاثة أربعة خمسة.", None, "5345"),
+        ("Sorry, one zero zero zero seven.", "10007", None),
+        ("رقم الطلب ١٠٩٩٩", "10999", None),
+        ("אלס-10999.", "10999", None),  # "LS" came back in Hebrew letters
+        ("12:41", None, "1241"),  # "twelve forty-one" written as a time
+        ("10:35?", None, "1035"),
+    ],
+)
+def test_real_stt_transcripts(transcript, order, last4):
+    parsed = parse(transcript)
+    assert parsed.order_number == order
+    assert parsed.phone_last4 == last4
+
+
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        ("LS10045", ["10045"]),
+        ("رقم10045", ["10045"]),  # an Arabic word glued to the number
+        ("eight, two, six, zero", ["8260"]),  # commas between digit words join
+        ("one, zero, zero, four, five", ["10045"]),
+        ("10045, 7669", ["10045", "7669"]),  # but not between separate numerals
+    ],
+)
+def test_letters_and_commas_around_digits(text, expected):
+    assert extract_digit_groups(text) == expected
+
+
+# Known gap, kept as a to-do: numbers said in pairs or as quantities. These are real
+# transcripts from the live runs; the rules only read single digits. When a number-words
+# parser (or an LLM fallback) is added, remove the xfail marks.
+@pytest.mark.xfail(strict=True, reason="tens and quantities are not parsed yet")
+@pytest.mark.parametrize(
+    "transcript, digits",
+    [
+        ("سبعة وعشرين تسعين.", "2790"),  # "twenty-seven ninety", Arabic order: 7 and 20
+        ("آسف، عشرة آلاف وعشرون", "10020"),  # "ten thousand and twenty"
+        ("I said one oh nine ninety-nine.", "10999"),
+    ],
+)
+def test_numbers_in_pairs_or_quantities(transcript, digits):
+    assert digits in extract_digit_groups(transcript)

@@ -1,0 +1,229 @@
+{
+  "label": "live audio run: STT openai/gpt-4o-transcribe, TTS elevenlabs/eleven-flash-v2.5",
+  "run_id": "audio_openai_gpt-4o-transcribe_2026-10-08_smoke3-before-fixes",
+  "date": "2026-10-08",
+  "mode": "audio",
+  "stt_model": "openai/gpt-4o-transcribe",
+  "tts_model": "elevenlabs/eleven-flash-v2.5",
+  "tts_voice": "sarah",
+  "cost_source": "STT: usage.cost in each response; TTS: OpenRouter GET /api/v1/generation total_cost per reply",
+  "total_cost_usd": 0.013133,
+  "note": "Caller audio is synthetic TTS (clean studio-like speech, plus white noise on 2 calls), not real phone audio. Callers are scripted and do not adapt when STT mishears.",
+  "calls": 3,
+  "all": {
+    "task_success": {
+      "k": 0,
+      "n": 3,
+      "pct": 0.0
+    },
+    "order_capture": {
+      "k": 1,
+      "n": 3,
+      "pct": 33.3
+    },
+    "handover_decision": {
+      "k": 1,
+      "n": 3,
+      "pct": 33.3
+    },
+    "handover_recall": {
+      "k": 0,
+      "n": 0,
+      "pct": null
+    },
+    "false_handovers": 2,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 3,
+      "n": 3,
+      "pct": 100.0
+    },
+    "stt": {
+      "turns": 9,
+      "wer": {
+        "edits": 9,
+        "ref_words": 40,
+        "pct": 22.5
+      },
+      "number_capture": {
+        "k": 4,
+        "n": 6,
+        "pct": 66.7
+      },
+      "order_id_capture": {
+        "k": 2,
+        "n": 3,
+        "pct": 66.7
+      }
+    }
+  },
+  "en": {
+    "task_success": {
+      "k": 0,
+      "n": 1,
+      "pct": 0.0
+    },
+    "order_capture": {
+      "k": 0,
+      "n": 1,
+      "pct": 0.0
+    },
+    "handover_decision": {
+      "k": 0,
+      "n": 1,
+      "pct": 0.0
+    },
+    "handover_recall": {
+      "k": 0,
+      "n": 0,
+      "pct": null
+    },
+    "false_handovers": 1,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 1,
+      "n": 1,
+      "pct": 100.0
+    },
+    "latency_per_turn": {
+      "stt": {
+        "n": 3,
+        "avg_ms": 601.17,
+        "p95_ms": 966.96
+      },
+      "agent": {
+        "n": 3,
+        "avg_ms": 0.2,
+        "p95_ms": 0.37
+      },
+      "tts": {
+        "n": 3,
+        "avg_ms": 385.6,
+        "p95_ms": 404.79
+      },
+      "total": {
+        "n": 3,
+        "avg_ms": 986.97,
+        "p95_ms": 1354.36
+      }
+    },
+    "cost_per_call_usd": 0.00452,
+    "stt": {
+      "turns": 3,
+      "wer": {
+        "edits": 6,
+        "ref_words": 16,
+        "pct": 37.5
+      },
+      "number_capture": {
+        "k": 1,
+        "n": 2,
+        "pct": 50.0
+      },
+      "order_id_capture": {
+        "k": 0,
+        "n": 1,
+        "pct": 0.0
+      }
+    }
+  },
+  "ar": {
+    "task_success": {
+      "k": 0,
+      "n": 2,
+      "pct": 0.0
+    },
+    "order_capture": {
+      "k": 1,
+      "n": 2,
+      "pct": 50.0
+    },
+    "handover_decision": {
+      "k": 1,
+      "n": 2,
+      "pct": 50.0
+    },
+    "handover_recall": {
+      "k": 0,
+      "n": 0,
+      "pct": null
+    },
+    "false_handovers": 1,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 2,
+      "n": 2,
+      "pct": 100.0
+    },
+    "latency_per_turn": {
+      "stt": {
+        "n": 6,
+        "avg_ms": 470.35,
+        "p95_ms": 689.77
+      },
+      "agent": {
+        "n": 6,
+        "avg_ms": 0.1,
+        "p95_ms": 0.1
+      },
+      "tts": {
+        "n": 6,
+        "avg_ms": 373.17,
+        "p95_ms": 397.4
+      },
+      "total": {
+        "n": 6,
+        "avg_ms": 843.6,
+        "p95_ms": 1064.1
+      }
+    },
+    "cost_per_call_usd": 0.00431,
+    "stt": {
+      "turns": 6,
+      "wer": {
+        "edits": 3,
+        "ref_words": 24,
+        "pct": 12.5
+      },
+      "number_capture": {
+        "k": 3,
+        "n": 4,
+        "pct": 75.0
+      },
+      "order_id_capture": {
+        "k": 2,
+        "n": 2,
+        "pct": 100.0
+      }
+    }
+  },
+  "latency_per_turn": {
+    "stt": {
+      "n": 9,
+      "avg_ms": 513.96,
+      "p95_ms": 917.1
+    },
+    "agent": {
+      "n": 9,
+      "avg_ms": 0.13,
+      "p95_ms": 0.28
+    },
+    "tts": {
+      "n": 9,
+      "avg_ms": 377.31,
+      "p95_ms": 405.16
+    },
+    "total": {
+      "n": 9,
+      "avg_ms": 891.39,
+      "p95_ms": 1301.22
+    }
+  },
+  "cost_per_call_usd": 0.00438,
+  "tts_cost_sources": {
+    "generation_api": 9,
+    "per_char_price": 0,
+    "unknown": 0
+  },
+  "cost_note": "TTS costs filled in after the run by evals/recost.py"
+}

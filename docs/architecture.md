@@ -20,7 +20,11 @@ Each spoken turn runs three stages in order, and each is timed separately
 
 1. **Speech-to-text** (`audio_client.py`): the caller's audio goes to OpenRouter's
    OpenAI-compatible transcription endpoint (multipart upload). Default model:
-   `openai/gpt-4o-transcribe` (set `MODEL_STT`).
+   `elevenlabs/scribe-v2` (set `MODEL_STT`), chosen by comparing 4 models on the 30 test
+   calls (README, Results). From the second turn on, the call's language is sent as a
+   hint (`pipeline.stt_language_hint`): without it, one-word answers such as "نعم" came
+   back in the wrong language. `openai/gpt-4o-transcribe` ignored the hint, the other
+   three models we tried followed it.
 2. **Agent** (`parser.py`, `agent.py`, `tools.py`, `replies.py`): deterministic rules, no
    LLM. The parser turns the transcript into digits, intents and a language guess. The
    agent is a state machine:
@@ -41,9 +45,17 @@ stateDiagram-v2
   ask_order --> handover: asks for a person (any state)
 ```
 
-3. **Text-to-speech**: the reply goes to OpenRouter's speech endpoint with delivery
-   instructions (calm, read digits slowly; Arabic with a neutral Gulf-friendly accent).
-   Default model: `openai/gpt-4o-mini-tts-2025-12-15` (set `MODEL_TTS`).
+3. **Text-to-speech**: the reply goes to OpenRouter's speech endpoint. Default model:
+   `elevenlabs/eleven-flash-v2.5`, voice `sarah` (set `MODEL_TTS`, `TTS_VOICE`): the
+   fastest of three models tried (avg 426 ms per reply in the final live run), priced per
+   character. Delivery instructions (calm, read digits slowly) are sent too; OpenRouter
+   forwards them only to OpenAI and Gemini voices, so this voice ignores them. The
+   speech endpoint returns only audio, so the evaluation asks OpenRouter for each
+   reply's cost by its generation ID (`audio_client.generation_costs`).
+
+The test callers use a different voice model, `google/gemini-3.8-flash-lite-tts`
+(`MODEL_TTS_CALLER`, only in `evals/synthesize_audio.py`), which follows instructions such
+as "speak quickly".
 
 ### Why the agent has no LLM
 
@@ -53,8 +65,13 @@ stateDiagram-v2
   can be said by accident, and the Arabic wording was written, not generated.
 
 The trade-off: the parser only understands the phrasings it was written for. A caller who
-says "ten thousand and forty-five" is asked to say the digits one by one. An LLM-based
-fallback for unclear turns is listed under next steps in the README.
+says "ten thousand and forty-five" is asked to say the digits one by one. The live runs
+showed what real transcripts look like, and the parser now also handles "LS10154" (no
+hyphen), commas between digit words ("ثمانية، ثلاثة"), a phone ending written as a time
+("12:41"), and digits in English words inside an Arabic call. Numbers said in pairs or as
+quantities ("سبعة وعشرين تسعين") are still not understood (`xfail` tests in
+`tests/test_parser.py`). An LLM-based fallback for unclear turns is listed under next
+steps in the README.
 
 ### Safety and privacy decisions
 

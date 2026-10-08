@@ -45,3 +45,8 @@ python -m evals.run --mode text
 python -m evals.run --mode audio --dry-run
 python app/app.py
 ```
+
+Live audio (costs money; read the README "How to run" first): `evals.synthesize_audio`,
+then `evals.crosscheck_stt --all-with-digits` to check the test audio, then
+`evals.run --mode audio --tag <name>` (each live run is about US$0.19; give each run its
+own tag so files are not overwritten), and `evals.recost` for late TTS costs.

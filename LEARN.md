@@ -25,8 +25,10 @@ short answers, and 3 small changes to practise live.
    join ("the last four 7669").
 6. **Evaluation (2 min).** Open `evals/calls.jsonl` (30 calls, 15 per language) and
    `evals/scoring.py`. Run `python -m evals.run --mode text`. Explain why the text-only
-   30/30 is a consistency check, not a speech result, and what the live audio run will
-   measure (per-stage latency, capture accuracy, cost per call).
+   30/30 is a consistency check, not a speech result: the first live audio run on the
+   same scripts scored 14/30. Open
+   `evals/results/audio_openai_gpt-4o-transcribe_2026-10-08_before-fixes_turns.jsonl`
+   and compare `script` with `heard` (for example "نعم" heard as "Na." or "Hey,").
 
 ## 10 interview questions with short answers
 
@@ -73,7 +75,8 @@ short answers, and 3 small changes to practise live.
 8. **What does the text-only 30/30 actually prove?**
    That the dialogue logic and scoring are consistent on the scripts. It does not prove
    speech accuracy, because the scripts and the parser were written together. The live
-   audio run is the real test, and scripted callers make it a lower bound.
+   audio run is the real test: it scored 14/30 before the fixes and 26/30 after them (on
+   the same 30 calls, so still optimistic), and scripted callers make it a lower bound.
 
 9. **How do you keep tests free of network calls and secrets?**
    Every model call goes through one client with the same interface as a fake client.

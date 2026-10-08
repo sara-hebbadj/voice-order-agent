@@ -1,0 +1,228 @@
+{
+  "label": "live audio run: STT elevenlabs/scribe-v2, TTS elevenlabs/eleven-flash-v2.5",
+  "run_id": "audio_elevenlabs_scribe-v2_2026-10-08_repeat",
+  "date": "2026-10-08",
+  "mode": "audio",
+  "stt_model": "elevenlabs/scribe-v2",
+  "tts_model": "elevenlabs/eleven-flash-v2.5",
+  "tts_voice": "sarah",
+  "cost_source": "STT: usage.cost in each response; TTS: OpenRouter GET /api/v1/generation total_cost per reply, or characters x per-character price when that record is missing",
+  "tts_cost_sources": {
+    "generation_api": 82,
+    "per_char_price": 18,
+    "unknown": 0
+  },
+  "total_cost_usd": 0.169651,
+  "note": "Caller audio is synthetic TTS (clean studio-like speech, plus white noise on 2 calls), not real phone audio. Callers are scripted and do not adapt when STT mishears.",
+  "calls": 30,
+  "all": {
+    "task_success": {
+      "k": 23,
+      "n": 30,
+      "pct": 76.7
+    },
+    "order_capture": {
+      "k": 20,
+      "n": 28,
+      "pct": 71.4
+    },
+    "handover_decision": {
+      "k": 23,
+      "n": 30,
+      "pct": 76.7
+    },
+    "handover_recall": {
+      "k": 7,
+      "n": 8,
+      "pct": 87.5
+    },
+    "false_handovers": 6,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 30,
+      "n": 30,
+      "pct": 100.0
+    },
+    "stt": {
+      "turns": 100,
+      "wer": {
+        "edits": 31,
+        "ref_words": 460,
+        "pct": 6.7
+      },
+      "number_capture": {
+        "k": 53,
+        "n": 61,
+        "pct": 86.9
+      },
+      "order_id_capture": {
+        "k": 27,
+        "n": 33,
+        "pct": 81.8
+      }
+    }
+  },
+  "en": {
+    "task_success": {
+      "k": 14,
+      "n": 15,
+      "pct": 93.3
+    },
+    "order_capture": {
+      "k": 11,
+      "n": 14,
+      "pct": 78.6
+    },
+    "handover_decision": {
+      "k": 14,
+      "n": 15,
+      "pct": 93.3
+    },
+    "handover_recall": {
+      "k": 3,
+      "n": 4,
+      "pct": 75.0
+    },
+    "false_handovers": 0,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "latency_per_turn": {
+      "stt": {
+        "n": 49,
+        "avg_ms": 790.44,
+        "p95_ms": 1239.68
+      },
+      "agent": {
+        "n": 49,
+        "avg_ms": 1.94,
+        "p95_ms": 7.6
+      },
+      "tts": {
+        "n": 49,
+        "avg_ms": 410.73,
+        "p95_ms": 592.14
+      },
+      "total": {
+        "n": 49,
+        "avg_ms": 1203.12,
+        "p95_ms": 1620.26
+      }
+    },
+    "cost_per_call_usd": 0.00622,
+    "stt": {
+      "turns": 49,
+      "wer": {
+        "edits": 11,
+        "ref_words": 235,
+        "pct": 4.7
+      },
+      "number_capture": {
+        "k": 27,
+        "n": 30,
+        "pct": 90.0
+      },
+      "order_id_capture": {
+        "k": 13,
+        "n": 16,
+        "pct": 81.2
+      }
+    }
+  },
+  "ar": {
+    "task_success": {
+      "k": 9,
+      "n": 15,
+      "pct": 60.0
+    },
+    "order_capture": {
+      "k": 9,
+      "n": 14,
+      "pct": 64.3
+    },
+    "handover_decision": {
+      "k": 9,
+      "n": 15,
+      "pct": 60.0
+    },
+    "handover_recall": {
+      "k": 4,
+      "n": 4,
+      "pct": 100.0
+    },
+    "false_handovers": 6,
+    "status_leaks": 0,
+    "language_ok": {
+      "k": 15,
+      "n": 15,
+      "pct": 100.0
+    },
+    "latency_per_turn": {
+      "stt": {
+        "n": 51,
+        "avg_ms": 695.62,
+        "p95_ms": 985.8
+      },
+      "agent": {
+        "n": 51,
+        "avg_ms": 1.14,
+        "p95_ms": 6.95
+      },
+      "tts": {
+        "n": 51,
+        "avg_ms": 426.44,
+        "p95_ms": 612.4
+      },
+      "total": {
+        "n": 51,
+        "avg_ms": 1123.2,
+        "p95_ms": 1566.55
+      }
+    },
+    "cost_per_call_usd": 0.00509,
+    "stt": {
+      "turns": 51,
+      "wer": {
+        "edits": 20,
+        "ref_words": 225,
+        "pct": 8.9
+      },
+      "number_capture": {
+        "k": 26,
+        "n": 31,
+        "pct": 83.9
+      },
+      "order_id_capture": {
+        "k": 14,
+        "n": 17,
+        "pct": 82.4
+      }
+    }
+  },
+  "latency_per_turn": {
+    "stt": {
+      "n": 100,
+      "avg_ms": 742.08,
+      "p95_ms": 1130.11
+    },
+    "agent": {
+      "n": 100,
+      "avg_ms": 1.53,
+      "p95_ms": 7.31
+    },
+    "tts": {
+      "n": 100,
+      "avg_ms": 418.74,
+      "p95_ms": 602.65
+    },
+    "total": {
+      "n": 100,
+      "avg_ms": 1162.36,
+      "p95_ms": 1622.01
+    }
+  },
+  "cost_per_call_usd": 0.00566
+}

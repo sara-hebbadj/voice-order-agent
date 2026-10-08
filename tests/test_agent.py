@@ -92,3 +92,10 @@ def test_repeat_returns_the_last_reply(agent):
     first = agent.handle("10154")
     again = agent.handle("Sorry, can you repeat that?")
     assert again.reply == first.reply and agent.state.failures == 0
+
+
+def test_digits_in_english_words_do_not_switch_an_arabic_call(agent):
+    # Live run (scribe-v2): an Arabic caller's "9026" was transcribed as English words.
+    agent.handle("طلبي رقم 10018")
+    turn = agent.handle("nine zero two six")
+    assert turn.language == "ar"

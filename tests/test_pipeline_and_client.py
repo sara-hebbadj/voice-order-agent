@@ -64,3 +64,46 @@ def test_real_client_request_shape_without_network(tmp_path):
     assert [r["kind"] for r in records] == ["stt", "tts"]
     assert records[0]["usage"]["cost"] == 0.0001
     assert SETTINGS.api_key not in trace.read_text()  # the key is never logged
+
+
+class RecordingFakeClient(FakeAudioClient):
+    """Remembers the language hint of every transcription request."""
+
+    def __init__(self):
+        self.languages = []
+
+    def transcribe(self, audio, filename="speech.wav", language=None):
+        self.languages.append(language)
+        return super().transcribe(audio, filename, language)
+
+
+def test_stt_gets_the_call_language_once_known(agent):
+    # Live run 1: with no hint, a lone "نعم" was transcribed as "Neam." and the yes was lost.
+    client = RecordingFakeClient()
+    for line in ["رقم الطلب 10012", "نعم"]:
+        run_voice_turn(agent, client, fake_audio(line))
+    assert client.languages == [None, "ar"]  # first turn: let STT detect the language
+
+
+def test_no_hint_while_the_language_is_unknown(agent):
+    client = RecordingFakeClient()
+    run_voice_turn(agent, client, fake_audio("10012"))  # digits only: no language yet
+    run_voice_turn(agent, client, fake_audio("yes"))
+    assert client.languages == [None, None]
+
+
+def test_generation_costs_retries_until_the_record_appears():
+    httpx2 = pytest.importorskip("httpx2")
+    asked = []
+
+    def handler(request):
+        asked.append(request.url.params["id"])
+        if request.url.path.endswith("/generation") and len(asked) > 1:
+            return httpx2.Response(200, json={"data": {"total_cost": 0.0012}})
+        return httpx2.Response(404, json={"error": {"message": "Not Found", "code": 404}})
+
+    client = OpenRouterAudioClient(
+        SETTINGS, http_client=httpx2.Client(transport=httpx2.MockTransport(handler)))
+    client._client = client._client.with_options(max_retries=0)
+    assert client.generation_costs(["gen-1"], passes=2, wait_s=0) == {"gen-1": 0.0012}
+    assert asked == ["gen-1", "gen-1"]

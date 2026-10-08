@@ -7,6 +7,12 @@
 
 Outputs go to evals/results/ (real runs) or evals/dry_run/ (never real results):
   <run>_calls.csv, <run>_turns.jsonl, <run>_summary.json, and traces.jsonl for audio runs.
+Live audio runs also save the agent's spoken replies as evals/audio/<call_id>/reply_<n>.mp3
+(git-ignored) so you can listen to every call.
+
+Cost: speech-to-text cost comes back in each response (usage.cost). Text-to-speech returns
+only audio, so after the run we ask OpenRouter for each reply's exact cost by its
+generation ID. During the run, the budget guard uses an estimate from the character count.
 """
 
 import argparse
@@ -17,7 +23,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from evals.scoring import score_call, summarise
+from evals.scoring import score_call, score_turn, summarise
 from voice_agent.agent import OrderStatusAgent
 from voice_agent.audio_client import (
     FakeAudioClient,
@@ -56,6 +62,8 @@ def run_call(call: dict, mode: str, tools, audio_client, dry_run: bool) -> tuple
     agent = OrderStatusAgent(tools)
     turns, cost = [], 0.0
     for index, script in enumerate(call["turns"]):
+        record = {"call_id": call["call_id"], "language": call["language"], "turn": index + 1,
+                  "script": script}
         if mode == "text":
             agent_turn, timings = run_text_turn(agent, script)
             heard = script
@@ -64,11 +72,16 @@ def run_call(call: dict, mode: str, tools, audio_client, dry_run: bool) -> tuple
             voice_turn = run_voice_turn(agent, audio_client, audio, filename=filename)
             agent_turn, timings = voice_turn.agent_turn, voice_turn.timings_ms
             heard = voice_turn.transcript.text
-            cost += voice_turn.transcript.usage.get("cost") or 0.0
-            cost += _tts_cost(audio_client, agent_turn.reply)
-        turns.append({
-            "call_id": call["call_id"], "turn": index + 1, "script": script, "heard": heard,
-            "reply": agent_turn.reply, "stage": agent_turn.stage,
+            stt_cost = voice_turn.transcript.usage.get("cost") or 0.0
+            cost += stt_cost + _tts_estimate(audio_client, agent_turn.reply)
+            record |= {"stt_language_hint": voice_turn.stt_language,
+                       "stt_scores": score_turn(script, heard), "stt_cost_usd": stt_cost,
+                       "tts_chars": len(agent_turn.reply),
+                       "tts_generation_id": audio_client.last_tts_generation_id}
+            if not dry_run:
+                save_reply_audio(call, index, voice_turn.reply_audio)
+        turns.append(record | {
+            "heard": heard, "reply": agent_turn.reply, "stage": agent_turn.stage,
             "tool_calls": [dataclasses.asdict(c) | {"result": None} for c in agent_turn.tool_calls],
             "timings_ms": timings,
         })
@@ -93,9 +106,49 @@ def run_call(call: dict, mode: str, tools, audio_client, dry_run: bool) -> tuple
     return row, turns
 
 
-def _tts_cost(audio_client, text: str) -> float:
+def _tts_estimate(audio_client, text: str) -> float:
+    """Character-count estimate, only for the budget guard while the run is going."""
     price = getattr(getattr(audio_client, "settings", None), "tts_price_per_1m_chars", None)
     return len(text) * price / 1e6 if price else 0.0
+
+
+def save_reply_audio(call: dict, index: int, audio: bytes) -> None:
+    path = AUDIO_DIR / call["call_id"] / f"reply_{index + 1}.mp3"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(audio)
+
+
+def add_exact_costs(rows: list[dict], turns: list[dict], audio_client) -> dict:
+    """Replace the TTS estimates with OpenRouter's cost per reply, then total each call."""
+    costs = audio_client.generation_costs([t["tts_generation_id"] for t in turns])
+    for turn in turns:
+        turn["tts_cost_usd"] = costs.get(turn["tts_generation_id"])
+        turn["tts_cost_source"] = "generation_api" if turn["tts_cost_usd"] is not None else None
+    price = getattr(audio_client.settings, "tts_price_per_1m_chars", None)
+    counts = fill_missing_tts_costs(turns, price)
+    total_calls(rows, turns)
+    return counts
+
+
+def fill_missing_tts_costs(turns: list[dict], price_per_1m_chars: float | None) -> dict:
+    """Some generation records never appear in OpenRouter's API. For a model priced per
+    character (the default ElevenLabs voice), characters x price is the exact cost: it
+    matched every record we did get on 8 October 2026. Each turn says where its cost
+    came from; turns with no cost at all stay None and are counted."""
+    for turn in turns:
+        if turn["tts_cost_usd"] is None and price_per_1m_chars:
+            turn["tts_cost_usd"] = round(turn["tts_chars"] * price_per_1m_chars / 1e6, 8)
+            turn["tts_cost_source"] = "per_char_price"
+    sources = [t["tts_cost_source"] for t in turns]
+    return {"generation_api": sources.count("generation_api"),
+            "per_char_price": sources.count("per_char_price"), "unknown": sources.count(None)}
+
+
+def total_calls(rows: list[dict], turns: list[dict]) -> None:
+    for row in rows:
+        call_turns = [t for t in turns if t["call_id"] == row["call_id"]]
+        row["cost_usd"] = round(sum(t["stt_cost_usd"] + (t["tts_cost_usd"] or 0.0)
+                                    for t in call_turns), 6)
 
 
 def write_outputs(out_dir: Path, run_id: str, rows: list, turns: list, summary: dict) -> None:
@@ -120,10 +173,19 @@ def print_summary(summary: dict) -> None:
               f" | handover decisions {s['handover_decision']['k']}/{s['handover_decision']['n']}"
               f" | status leaks {s['status_leaks']} | language {s['language_ok']['k']}/"
               f"{s['language_ok']['n']}")
-    for stage, lat in summary["latency_per_turn"].items():
-        if lat["n"]:
-            print(f"  latency {stage:>5}: avg {lat['avg_ms']} ms, p95 {lat['p95_ms']} ms "
-                  f"(n={lat['n']} turns)")
+        if "stt" in s:
+            stt = s["stt"]
+            print(f"        STT: WER {stt['wer']['pct']}% ({stt['wer']['edits']}/"
+                  f"{stt['wer']['ref_words']} words) | numbers {stt['number_capture']['k']}/"
+                  f"{stt['number_capture']['n']} | order IDs {stt['order_id_capture']['k']}/"
+                  f"{stt['order_id_capture']['n']} turns | cost/call US$"
+                  f"{s.get('cost_per_call_usd', summary['cost_per_call_usd'])}")
+        latencies = s.get("latency_per_turn") or (summary["latency_per_turn"]
+                                                  if lang == "all" else {})
+        for stage, lat in latencies.items():
+            if lat["n"]:
+                print(f"        latency {stage:>5}: avg {lat['avg_ms']} ms, p95 {lat['p95_ms']}"
+                      f" ms (n={lat['n']} turns)")
 
 
 def main(argv: list[str] | None = None) -> dict:
@@ -135,6 +197,7 @@ def main(argv: list[str] | None = None) -> dict:
     parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--stt-model", default=None, help="override MODEL_STT")
     parser.add_argument("--tts-model", default=None, help="override MODEL_TTS")
+    parser.add_argument("--tag", default=None, help="added to the run name, e.g. before-fixes")
     args = parser.parse_args(argv)
 
     settings = load_settings()
@@ -160,6 +223,10 @@ def main(argv: list[str] | None = None) -> dict:
             audio_client = OpenRouterAudioClient(settings, trace_path=out_dir / "traces.jsonl")
         except MissingKeyError as error:
             sys.exit(f"{error} Use --dry-run to test the pipeline without a key.")
+        if args.limit:
+            run_id += f"_first{args.limit}"  # a smoke run never overwrites the full run
+        if args.tag:
+            run_id += f"_{args.tag}"
 
     tools = make_order_tools(settings.order_api_url)
     rows, all_turns, total_cost = [], [], 0.0
@@ -172,10 +239,22 @@ def main(argv: list[str] | None = None) -> dict:
             print(f"Stopping: cost US${total_cost:.2f} passed MAX_COST_PER_RUN_USD.")
             break
 
+    extra = {}
+    if args.mode == "audio" and not args.dry_run:
+        cost_sources = add_exact_costs(rows, all_turns, audio_client)
+        extra = {"tts_voice": settings.tts_voice,
+                 "cost_source": "STT: usage.cost in each response; TTS: OpenRouter "
+                                "GET /api/v1/generation total_cost per reply, or characters "
+                                "x per-character price when that record is missing",
+                 "tts_cost_sources": cost_sources,
+                 "total_cost_usd": round(sum(r["cost_usd"] for r in rows), 6),
+                 "note": "Caller audio is synthetic TTS (clean studio-like speech, plus white "
+                         "noise on 2 calls), not real phone audio. Callers are scripted and "
+                         "do not adapt when STT mishears."}
     summary = {"label": label, "run_id": run_id, "date": today, "mode": args.mode,
                "stt_model": None if args.mode == "text" else audio_client.stt_model,
                "tts_model": None if args.mode == "text" else audio_client.tts_model,
-               **summarise(rows, all_turns)}
+               **extra, **summarise(rows, all_turns)}
     write_outputs(out_dir, run_id, rows, all_turns, summary)
     print_summary(summary)
     print(f"  wrote {out_dir}/{run_id}_*")

@@ -17,6 +17,9 @@ _ARABIC_LETTER = re.compile(r"[ء-ي]")
 _LATIN_LETTER = re.compile(r"[A-Za-z]")
 _ARABIC_INDIC_DIGIT = re.compile(r"[\u0660-\u0669\u06F0-\u06F9]")
 _TOKEN = re.compile(r"\w+")
+# A letter directly followed by a digit or the other way round: speech-to-text writes
+# "LS-10154" as "LS10154", which would otherwise be one word with no number in it.
+_LETTER_DIGIT_BOUNDARY = re.compile(r"(?<=[A-Za-zء-ي])(?=\d)|(?<=\d)(?=[A-Za-zء-ي])")
 
 EN_DIGIT_WORDS = {
     "zero": "0", "one": "1", "two": "2", "three": "3", "four": "4",
@@ -88,6 +91,7 @@ def normalise_arabic(text: str) -> str:
 
 def normalise(text: str) -> str:
     text = text.translate(_DIGIT_TABLE).replace("\u2019", "'")  # curly apostrophe from STT
+    text = _LETTER_DIGIT_BOUNDARY.sub(" ", text)  # "LS10154" -> "LS 10154"
     return normalise_arabic(text).lower()
 
 
@@ -102,7 +106,13 @@ def detect_language(text: str) -> str | None:
 
 
 def count_words(text: str) -> int:
-    return sum(1 for w in _TOKEN.findall(text) if not w.isdigit())
+    """Words that are not numbers. Numbers say nothing about the caller's language: in a
+    live run an Arabic caller's "9026" came back from STT as "nine zero two six", and
+    counting those as four English words switched the call to English."""
+    tokens = _TOKEN.findall(normalise(text))
+    return sum(1 for i, token in enumerate(tokens)
+               if not token.isdigit() and _token_digits(tokens, i) is None
+               and token not in EN_REPEATERS)
 
 
 def _arabic_variants(token: str) -> list[str]:
@@ -136,7 +146,9 @@ def extract_digit_groups(text: str) -> list[str]:
     Rules (kept simple so they are easy to explain):
     - numerals next to numerals join when separated by spaces or hyphens
       ("1 0 0 4 5", "1-0-0-4-5"), or by a thousands comma/dot ("10,045");
-    - digit words next to digit words join ("one zero zero four five");
+    - digit words next to digit words join ("one zero zero four five"), also across a
+      comma, because speech-to-text adds them ("ثمانية، ثلاثة، خمسة، صفر");
+    - numerals around a colon join: STT writes "twelve forty-one" as the time "12:41";
     - a numeral and a digit word never join ("last four 7669" stays "4" and "7669");
     - "double"/"triple" repeat the next digit word; a lone Arabic "و" keeps a group going.
     """
@@ -184,10 +196,17 @@ def extract_digit_groups(text: str) -> list[str]:
 
 
 def _joins(separator: str, kind: str, token: str) -> bool:
-    if separator.strip() in ("", "-"):
+    separator = separator.strip()
+    if separator in ("", "-"):
+        return True
+    # "eight, two, six" or "ثمانية، ثلاثة": STT puts commas between spoken digits
+    if kind == "word" and separator in (",", "،"):
+        return True
+    # "12:41": a phone ending said in pairs ("twelve forty-one") comes back as a time
+    if kind == "numeral" and separator == ":":
         return True
     # "10,045" or "10.045": a thousands separator between numerals
-    return kind == "numeral" and separator.strip() in (",", ".") and len(token) == 3
+    return kind == "numeral" and separator in (",", ".") and len(token) == 3
 
 
 def find_order_number(groups: list[str]) -> str | None:
@@ -202,6 +221,22 @@ def find_phone_last4(groups: list[str]) -> str | None:
         if len(group) == PHONE_DIGITS or len(group) >= 9:
             return group[-PHONE_DIGITS:]
     return None
+
+
+def comparable_words(text: str) -> list[str]:
+    """Normalised words with every number split into single digits, used to compare a
+    transcript with the script it came from: '10154', 'one zero one five four' and
+    '١٠١٥٤' all become ['1', '0', '1', '5', '4']. Punctuation and case are ignored."""
+    tokens = _TOKEN.findall(normalise(text))
+    words, repeat = [], 1
+    for i, token in enumerate(tokens):
+        if token in EN_REPEATERS:
+            repeat = EN_REPEATERS[token]
+            continue
+        digits = token if token.isdigit() else _token_digits(tokens, i)
+        words.extend(list(digits * repeat) if digits else [token])
+        repeat = 1
+    return words
 
 
 def detect_intents(text: str) -> set[str]:

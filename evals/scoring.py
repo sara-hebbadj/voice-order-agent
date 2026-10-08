@@ -8,9 +8,47 @@ Definitions (also in the README):
 - correct handover decision: handed over if and only if expected, for the expected reason.
 - status leak: an order status was read out in a call that should end in a handover.
 - language: the agent's last reply is in the caller's language.
+
+Speech-to-text accuracy, per caller turn (audio runs only), comparing what STT heard
+with the script the caller audio was made from:
+- word error rate (WER): word edits / words in the script, after normalising both sides
+  (case, punctuation, Arabic letter variants) and splitting every number into single
+  digits, so "10154" and "one zero one five four" count as the same five words;
+- number capture: the digit groups the parser finds in the transcript equal the ones it
+  finds in the script (turns whose script contains digits);
+- order-ID capture: the 5-digit order number parsed from the transcript equals the one in
+  the script (turns whose script contains an order number).
 """
 
 import numpy as np
+
+from voice_agent.parser import comparable_words, extract_digit_groups, find_order_number
+
+
+def word_edits(reference: list[str], hypothesis: list[str]) -> int:
+    """Levenshtein distance between two word lists (substitutions, insertions, deletions)."""
+    previous = list(range(len(hypothesis) + 1))
+    for i, ref_word in enumerate(reference, start=1):
+        current = [i]
+        for j, hyp_word in enumerate(hypothesis, start=1):
+            current.append(min(previous[j] + 1, current[j - 1] + 1,
+                               previous[j - 1] + (ref_word != hyp_word)))
+        previous = current
+    return previous[-1]
+
+
+def score_turn(script: str, heard: str) -> dict:
+    """How well speech-to-text preserved one caller turn (see the module docstring)."""
+    reference, hypothesis = comparable_words(script), comparable_words(heard)
+    script_groups, heard_groups = extract_digit_groups(script), extract_digit_groups(heard)
+    script_order = find_order_number(script_groups)
+    return {
+        "ref_words": len(reference),
+        "word_edits": word_edits(reference, hypothesis),
+        "numbers_ok": (heard_groups == script_groups) if script_groups else None,
+        "order_id_ok": (find_order_number(heard_groups) == script_order)
+        if script_order else None,
+    }
 
 
 def _digits(order_id: str | None) -> str | None:
@@ -76,10 +114,35 @@ def summarise(rows: list[dict], turns: list[dict]) -> dict:
             "status_leaks": sum(1 for r in sub if r["status_leak"]),
             "language_ok": _rate([r["language_ok"] for r in sub]),
         }
-    summary["latency_per_turn"] = {
-        stage: _latency([t["timings_ms"][stage] for t in turns])
-        for stage in ("stt", "agent", "tts", "total")
-    }
+    summary["latency_per_turn"] = _latencies(turns)
     costs = [r["cost_usd"] for r in rows if r.get("cost_usd") is not None]
     summary["cost_per_call_usd"] = round(float(np.mean(costs)), 5) if costs else None
+    if any("stt_scores" in t for t in turns):  # audio runs only
+        for lang in ("en", "ar"):
+            lang_turns = [t for t in turns if t.get("language") == lang]
+            lang_costs = [r["cost_usd"] for r in rows
+                          if r["language"] == lang and r.get("cost_usd") is not None]
+            summary[lang]["latency_per_turn"] = _latencies(lang_turns)
+            summary[lang]["cost_per_call_usd"] = (round(float(np.mean(lang_costs)), 5)
+                                                  if lang_costs else None)
+        for lang in ("all", "en", "ar"):
+            lang_turns = [t for t in turns if lang == "all" or t.get("language") == lang]
+            summary[lang]["stt"] = _stt_accuracy([t["stt_scores"] for t in lang_turns])
     return summary
+
+
+def _latencies(turns: list[dict]) -> dict:
+    return {stage: _latency([t["timings_ms"][stage] for t in turns])
+            for stage in ("stt", "agent", "tts", "total")}
+
+
+def _stt_accuracy(scores: list[dict]) -> dict:
+    ref_words = sum(s["ref_words"] for s in scores)
+    edits = sum(s["word_edits"] for s in scores)
+    return {
+        "turns": len(scores),
+        "wer": {"edits": edits, "ref_words": ref_words,
+                "pct": round(100 * edits / ref_words, 1) if ref_words else None},
+        "number_capture": _rate([s["numbers_ok"] for s in scores]),
+        "order_id_capture": _rate([s["order_id_ok"] for s in scores]),
+    }
