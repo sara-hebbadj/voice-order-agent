@@ -35,7 +35,8 @@ KNOWN_TTS_PRICE_PER_1M_CHARS = {"elevenlabs/eleven-flash-v2.5": 20.0}
 
 def load_env_files() -> None:
     """Load repo/.env if present, otherwise the shared Portfolio Projects/.env."""
-    candidates = [REPO_ROOT / ".env", REPO_ROOT.parents[1] / ".env"]
+    # .parent.parent, not .parents[1]: on a Hugging Face Space the repo is /app (one parent only).
+    candidates = [REPO_ROOT / ".env", REPO_ROOT.parent.parent / ".env"]
     for path in candidates:
         if path.is_file():
             load_dotenv(path, override=False)

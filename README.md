@@ -6,7 +6,9 @@ to a person when asked or when it cannot help. Every stage of every turn is time
 
 ## Demo
 
-Live hosted demo: coming soon (Hugging Face Space).
+**Live demo:** [huggingface.co/spaces/sarahebbadj/voice-order-agent](https://huggingface.co/spaces/sarahebbadj/voice-order-agent) (works without an API key, in demo mode).
+
+To enable live AI on your own copy: add `OPENROUTER_API_KEY` as a Space secret.
 
 The Gradio app (`app/app.py`) takes microphone input and shows the transcript, the tool
 calls and the latency of each stage. Without an API key you can still type to the agent.
