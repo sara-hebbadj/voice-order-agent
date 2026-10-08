@@ -4,21 +4,30 @@
 
 Voice needs OPENROUTER_API_KEY (speech-to-text + text-to-speech). Typing works without
 a key, so the agent logic can be tried offline. All data is synthetic.
+On a Hugging Face Space, add OPENROUTER_API_KEY as a secret in the Space settings.
 """
 
 import csv
+import sys
 import tempfile
 from pathlib import Path
 
-import gradio as gr
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))  # works without install
 
-from voice_agent.agent import OrderStatusAgent
-from voice_agent.audio_client import MissingKeyError, OpenRouterAudioClient
-from voice_agent.config import DATA_DIR, load_settings
-from voice_agent.pipeline import run_text_turn, run_voice_turn
-from voice_agent.tools import make_order_tools
+import gradio as gr  # noqa: E402
+
+from voice_agent.agent import OrderStatusAgent  # noqa: E402
+from voice_agent.audio_client import MissingKeyError, OpenRouterAudioClient  # noqa: E402
+from voice_agent.config import DATA_DIR, load_settings  # noqa: E402
+from voice_agent.pipeline import run_text_turn, run_voice_turn  # noqa: E402
+from voice_agent.tools import make_order_tools  # noqa: E402
 
 MAX_TURNS_PER_CALL = 20  # demo limit, because every spoken turn costs money
+DEMO_MODE_NOTE = (
+    "**Demo mode — live AI is off; add OPENROUTER_API_KEY in Space settings to enable** "
+    "voice (speech-to-text and text-to-speech). Typing works now: the agent itself is "
+    "rule-based, so the typed conversation is the real logic."
+)
 LATENCY_HEADERS = ["turn", "input", "stt_ms", "agent_ms", "tts_ms", "total_ms"]
 
 settings = load_settings()
@@ -65,7 +74,7 @@ def on_voice(audio_path: str | None, session: dict, chat: list):
     if not audio_path:
         return session, chat, None, gr.skip(), session["latency"]
     if audio_client is None:
-        gr.Warning("Voice needs OPENROUTER_API_KEY in .env. You can type instead.")
+        gr.Warning("Voice needs OPENROUTER_API_KEY (Space settings or .env). You can type instead.")
         return session, chat, None, gr.skip(), session["latency"]
     if session["turns"] >= MAX_TURNS_PER_CALL:
         gr.Warning("Demo limit reached. Press 'New call'.")
@@ -97,8 +106,7 @@ def build_ui() -> gr.Blocks:
             "An automated assistant for a **fictional** shop with **synthetic** data. "
             "Say or type an order number, confirm it, then give the last 4 phone digits. "
             "Ask for a person at any time.\n\n"
-            + ("Voice is on." if audio_client else
-               "**Voice is off** (no OPENROUTER_API_KEY). Typing still works.")
+            + ("Voice is on." if audio_client else DEMO_MODE_NOTE)
         )
         session = gr.State(None)
         with gr.Row():

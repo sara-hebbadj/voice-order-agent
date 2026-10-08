@@ -6,10 +6,23 @@ to a person when asked or when it cannot help. Every stage of every turn is time
 
 ## Demo
 
-Demo video/Space: pending — to be recorded by Sara.
+Live hosted demo: coming soon (Hugging Face Space).
 
 The Gradio app (`app/app.py`) takes microphone input and shows the transcript, the tool
 calls and the latency of each stage. Without an API key you can still type to the agent.
+
+Screenshots from a local run on 8 October 2026 with **typed** turns: audio can't be shown in
+a GIF, so `stt_ms` and `tts_ms` are empty and only the agent's own time is measured. The
+headless browser used for the screenshots had no microphone. All data is synthetic.
+
+![A typed English call from order number to order status](docs/demo/demo.gif)
+*A typed English call: the order number is read back digit by digit, confirmed, checked against the phone digits, then the status is given.*
+
+![English call with transcript, tool calls and latency table](docs/demo/english-order-status.png)
+*English call: the transcript, the two tool calls of the last turn, and the latency of each turn.*
+
+![The same call in Arabic](docs/demo/arabic-order-status.png)
+*The same flow in Arabic for order LS-10172.*
 
 ## The problem
 
